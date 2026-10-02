@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A quick view of active projects and recent momentum.">
+    <title>Project Pulse</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="dashboard">
+      <header class="page-header">
+        <p class="eyebrow">Contributor workspace</p>
+        <h1>Project Pulse</h1>
+        <p class="intro">A quick view of active projects and recent momentum.</p>
+      </header>
+
+      <section class="projects-section" aria-labelledby="projects-heading">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Team overview</p>
+            <h2 id="projects-heading">Projects</h2>
+          </div>
+          <p id="project-count" class="project-count" aria-live="polite">Loading projects...</p>
+        </div>
+        <div id="project-grid" class="project-grid" aria-live="polite">
+          <p class="state-message">Loading the latest project pulse...</p>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const grid = document.querySelector("#project-grid");
+      const projectCount = document.querySelector("#project-count");
+
+      const statusClass = (status) => status.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+      const priorityClass = (priority) => priority.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+
+      function addDetail(list, label, value, className) {
+        const item = document.createElement("div");
+        item.className = className;
+        const term = document.createElement("dt");
+        term.textContent = label;
+        const description = document.createElement("dd");
+        description.textContent = value;
+        item.append(term, description);
+        list.append(item);
+      }
+
+      function renderProjects(projects) {
+        grid.replaceChildren();
+        projectCount.textContent = `${projects.length} ${projects.length === 1 ? "project" : "projects"} tracked`;
+
+        if (projects.length === 0) {
+          const empty = document.createElement("p");
+          empty.className = "state-message";
+          empty.textContent = "No projects are available yet.";
+          grid.append(empty);
+          return;
+        }
+
+        projects.forEach((project) => {
+          const card = document.createElement("article");
+          card.className = "project-card";
+
+          const cardHeader = document.createElement("div");
+          cardHeader.className = "card-header";
+          const title = document.createElement("h3");
+          title.textContent = project.name;
+          const status = document.createElement("span");
+          status.className = `status-badge status-${statusClass(project.status)}`;
+          status.textContent = project.status;
+          status.setAttribute("aria-label", `Status: ${project.status}`);
+          cardHeader.append(title, status);
+
+          const summary = document.createElement("p");
+          summary.className = "project-summary";
+          summary.textContent = project.summary || "No summary provided.";
+
+          const details = document.createElement("dl");
+          details.className = "project-meta";
+          addDetail(details, "Owner", project.owner, "meta-item");
+          addDetail(details, "Recent activity", project.recentActivity, "meta-item");
+
+          const priority = document.createElement("div");
+          priority.className = `priority priority-${priorityClass(project.priority)}`;
+          priority.textContent = `Priority: ${project.priority}`;
+
+          card.append(cardHeader, summary, details, priority);
+          grid.append(card);
+        });
+      }
+
+      fetch("project-data.json")
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`Project data request failed with status ${response.status}.`);
+          }
+          return response.json();
+        })
+        .then((data) => {
+          if (!data || !Array.isArray(data.projects)) {
+            throw new Error("Project data does not contain a projects array.");
+          }
+          renderProjects(data.projects);
+        })
+        .catch((error) => {
+          grid.replaceChildren();
+          projectCount.textContent = "Unable to load projects";
+          const message = document.createElement("p");
+          message.className = "state-message state-error";
+          message.textContent = `We couldn't load the project pulse. ${error.message}`;
+          grid.append(message);
+        });
+    </script>
+  </body>
+</html>

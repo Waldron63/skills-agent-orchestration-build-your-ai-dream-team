@@ -1,0 +1,44 @@
+{
+  "projects": [
+    {
+      "name": "Atlas Onboarding",
+      "owner": "Mona Patel",
+      "status": "On track",
+      "recentActivity": "Content review completed 2 hours ago",
+      "priority": "High",
+      "summary": "Streamlining the first-week experience for new contributors."
+    },
+    {
+      "name": "Signal Insights",
+      "owner": "Jordan Lee",
+      "status": "At risk",
+      "recentActivity": "Data quality review scheduled for tomorrow",
+      "priority": "High",
+      "summary": "Turning support themes into a clearer view of customer momentum."
+    },
+    {
+      "name": "Northstar API",
+      "owner": "Priya Nair",
+      "status": "On track",
+      "recentActivity": "The v2 authentication draft was shared yesterday",
+      "priority": "Medium",
+      "summary": "Making internal project signals easier to discover and reuse."
+    },
+    {
+      "name": "Workspace Refresh",
+      "owner": "Theo Martin",
+      "status": "Blocked",
+      "recentActivity": "Waiting on accessibility review feedback",
+      "priority": "Medium",
+      "summary": "Refreshing the shared workspace without losing familiar workflows."
+    },
+    {
+      "name": "Release Notes",
+      "owner": "Avery Chen",
+      "status": "Complete",
+      "recentActivity": "The contributor guide shipped last Friday",
+      "priority": "Low",
+      "summary": "Creating a dependable rhythm for sharing product changes."
+    }
+  ]
+}
